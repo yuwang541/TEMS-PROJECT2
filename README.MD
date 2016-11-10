@@ -20,7 +20,7 @@ With sourceTableA as (
  ,risk_loan_classification_prefix 
 ,concat('DII_',direct_indirect) as direct_indirect 
 ,concat('SEC_',security_type) as security_type
-,concat('INS_',insurance) as insurance
+,concat('INS_',security_type) as insurance
 ,concat('BSG_',business_segment) as business_segment
 ,concat('OBU_',org_business_unit) as org_business_unit
 ,view
@@ -108,12 +108,12 @@ sa.measure
 , sa.time_period
 -- , concat('GEO_',nvl(lkp7.geography,'No_Geography')) as geography
 , nvl(lkp5.product,'PRD_No_Product') as product
-, case when risk_loan_classification_prefix = 'BRI' then nvl(lkp7.risk_loan_classification,'BRI_No_BRI')
+, case when risk_loan_classification_prefix = 'BRI' then nvl(lkp7.risk_loan_classification,'BRI_NO_BRI')
        when risk_loan_classification_prefix = 'TDSR' then nvl(lkp7.risk_loan_classification,'TDSR_No_TDSR')
        when risk_loan_classification_prefix = 'GDSR' then nvl(lkp7.risk_loan_classification,'GDSR_No_GDSR')
  --      when risk_loan_classification_prefix = 'SPR' then nvl(lkp7.risk_loan_classification,'SPR_No_Specialty')
- --      when risk_loan_classification_prefix = 'ATR' then nvl(lkp7.risk_loan_classification,'ATR_No_ATrisk')
-	when risk_loan_classification_prefix = 'BKO' then nvl(lkp7.risk_loan_classification,'BKO_No_Bky_Indicator')
+  --     when risk_loan_classification_prefix = 'ATR' then nvl(lkp7.risk_loan_classification,'ATR_No_ATrisk')
+       when risk_loan_classification_prefix = 'BKO' then nvl(lkp7.risk_loan_classification,'BKO_No_Bky_Indicator')
        when risk_loan_classification_prefix = 'BCO' then nvl(lkp7.risk_loan_classification,'BCO_No_CutOff_Ind')
        when risk_loan_classification_prefix = 'EAI' then nvl(lkp7.risk_loan_classification,'EAI_No_Exception_Indicator')
        else 'RLC_No_Risk_Class'
@@ -156,6 +156,7 @@ on sa.insurance= lkp10.insurance
 left join lookupTable11 lkp11
 on sa.record_type= lkp11.record_type
 ) 
+
 ,sourceTable as (
 select
    measure
@@ -172,7 +173,6 @@ select
 ,org_business_unit
 ,view
 ,currency
-,count(*) as count_num
 ,sum(data) as data
 from sourceTableB 
 group by
@@ -192,6 +192,6 @@ group by
 ,currency
 )
 
-select  count(*)  from sourceTable s
+select  count(*) from sourceTable s
 ;
 
